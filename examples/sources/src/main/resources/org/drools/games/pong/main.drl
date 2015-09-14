@@ -1,0 +1,33 @@
+package org.drools.games.pong;
+
+import org.drools.games.Run;
+
+dialect  "mvel"
+
+rule InitMain when
+then
+    insert( new Run() );
+    setFocus( "Init" );
+end
+
+rule Main when
+    $r : Run()
+then
+    setFocus( "Keys" );
+    setFocus( "Move" );
+    setFocus( "Collision" );
+    setFocus( "Game" );
+end
+
+rule Redraw when
+   gui : PongUI()
+   ball : Ball()
+   bat1 : Bat( playerId == PlayerId.PlayerOne )
+   bat2 : Bat( playerId == PlayerId.PlayerTwo )
+   p1 : Player( id == PlayerId.PlayerOne)
+   p2 : Player( id == PlayerId.PlayerTwo)
+   $r : Run()
+then
+   gui.drawGame(ball, bat1, bat2, p1, p2);
+   modify( $r ) {}
+end
